@@ -45,9 +45,6 @@ services:
       name: dify-storage
       mountPath: /app/api/storage
       sizeGB: 20
-    scaling:
-      min: 1
-      max: 3
 
   - type: worker
     name: dify-worker
@@ -61,20 +58,12 @@ services:
       name: dify-storage
       mountPath: /app/api/storage
       sizeGB: 20
-    scaling:
-      min: 1
-      max: 5
-
+      
   - type: web
     name: dify-web
     env: docker
     dockerfilePath: ./Dockerfile.web
     dockerContext: .
-    scaling:
-      minInstances: 1
-      maxInstances: 3
-      targetMemoryPercent: 80
-      targetCPUPercent: 70
     envVars:
       - key: CONSOLE_API_URL
         sync: false
@@ -86,9 +75,6 @@ services:
         value: "https://marketplace.dify.ai"
       - key: PM2_INSTANCES
         value: "2"
-    scaling:
-      min: 1
-      max: 3
     metrics:
       - type: cpu
       - type: memory

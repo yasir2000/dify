@@ -8,15 +8,7 @@ services:
     envVars:
       - key: MODE
         value: api
-      - key: SENTRY_DSN
-        sync: false
-      - key: SENTRY_TRACES_SAMPLE_RATE
-        value: "1.0"
-      - key: SENTRY_PROFILES_SAMPLE_RATE
-        value: "1.0"
-      - key: PLUGIN_MAX_PACKAGE_SIZE
-        value: "52428800"
-      - key: DB_USERNAME 
+      - key: DB_USERNAME
         fromDatabase:
           name: dify-db
           property: user
@@ -36,7 +28,7 @@ services:
         fromDatabase:
           name: dify-redis
           property: host
-      - key: REDIS_PORT 
+      - key: REDIS_PORT
         fromDatabase:
           name: dify-redis
           property: port
@@ -48,17 +40,9 @@ services:
       name: dify-storage
       mountPath: /app/api/storage
       sizeGB: 20
-    dependencies:
-      - name: dify-db
-      - name: dify-redis
-      - name: dify-ssrf-proxy
     autoscaling:
       min: 1
       max: 3
-    healthCheckTimeout: 5
-    metrics:
-      - type: cpu
-      - type: memory
 
   - type: worker
     name: dify-worker
@@ -72,16 +56,9 @@ services:
       name: dify-storage
       mountPath: /app/api/storage
       sizeGB: 20
-    dependencies:
-      - name: dify-db
-      - name: dify-redis
-      - name: dify-ssrf-proxy
     autoscaling:
       min: 1
       max: 5
-    metrics:
-      - type: cpu
-      - type: memory
 
   - type: web
     name: dify-web
@@ -92,8 +69,6 @@ services:
       - key: CONSOLE_API_URL
         sync: false
       - key: APP_API_URL
-        sync: false
-      - key: SENTRY_DSN
         sync: false
       - key: TEXT_GENERATION_TIMEOUT_MS
         value: "60000"
@@ -116,10 +91,6 @@ databases:
     ipAllowList:
       - source: 0.0.0.0/0
         description: everywhere
-    settings:
-      maxConnections: 100
-      backupSchedule: "0 0 * * *"
-      backupRetentionPeriod: 7
 
   - name: dify-redis
     type: redis
